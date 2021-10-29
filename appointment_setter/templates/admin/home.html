@@ -1,0 +1,142 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+
+{% block title %}
+  <title>Admin - Dashboard</title>
+  <style>
+    .cardSet{
+    width: 90%;
+    margin: 50px auto;
+    box-sizing: border-box;
+  }
+  .row{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-flow: wrap;
+  }
+  .card{
+    width: 20%;
+    background: rgba(255, 204, 204, 0.658);
+    border: 1px solid darkred ;  
+    opacity: 0.9;
+    margin-bottom: 50px;
+    transition: 0.3s ease-in;
+
+  }
+
+  .card-content, .card-label{
+    color: rgb(0, 0, 0);
+    margin-bottom: 5px;
+    text-align: left;
+    padding: 2px 5px;
+    margin-left: 20px;
+  }
+  .card-content{
+    margin-bottom: 10px;
+  }
+  .card-label{
+    margin-bottom: -25px;
+    margin-top: 10px;
+  }
+  .card:hover{
+    background: rgba(255, 39, 39, 0.603);
+  
+  }
+  @media screen and (max-width: 1600px){
+    .card{
+      width: 35%;
+    }
+  }
+  @media screen and (max-width: 1045px){
+    .card{
+      width: 45%;
+    }
+  }
+  @media screen and (max-width: 780px){
+    .card{
+      width: 90%;
+    }
+    .cardSet{
+      margin: 10px auto;
+    }
+  }
+  </style>
+{% endblock %}
+{% block mobile_nav %} <h4>Admin Profile</h4> {% endblock %}
+        
+{% block mobile_nav_items %}
+    <a class="active" href="{% url 'admin-home' %}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
+{% endblock %}
+{% block sidebar %}<h4>Admin Profile</h4>{% endblock %}
+{% block sidebar_items %}
+<a class="active" href="{% url 'admin-home' %}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
+{% endblock %}
+{%block content%}
+<div class="cardSet" >
+  <div class="row">
+    {% for post in posts %}
+    
+      <div class="card" >
+        <a id="card{{ forloop.counter}}" href="{% url 'admin-about' %}" onclick="getId(this)">
+          <div >
+            <div class="card-label">Student Number:</div>
+            <h2 class="card-content" id="StudentNum1">{{ post.StudentName}}</h2> <!--index 0-->
+            <div class="card-label">Requested Document:</div>
+            <h3 class="card-content" id="ReqDoc1" >{{ post.ReqDocu}}</h3> <!--index 1-->
+            <div class="card-label" >Date Requested:</div>
+            <h4 class="card-content" id="ReqDate1" >{{ post.request_date}}</h4> <!--index 2-->
+            <div class="card-label" >Time Requested:</div>
+            <h4 class="card-content" id="ReqTime1" >{{ post.request_time}}</h4><!--index 3-->
+            <div class="card-label" >Appointment Status</div>
+            <h4 class="card-content" id="Status1" style="color: darkblue">Pending for Approval</h4>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+</div> 
+
+{% endblock %}
+
+{% block js %}
+  <!-- <script type= "text/javascript">
+    function valueSender(clicked_id){
+      // var sn = document.getElementById("StudentNum").textContent;
+      // localStorage.setItem("Student_num", sn);
+      // window.location.href = "{% url 'admin-about' %}";
+
+      var clicks = clicked_id;
+      var try01 = document.getElementById("StudentNum");
+
+    }
+  </script> -->
+  <script>
+  // var theParent = document.querySelector("#card");
+  // theParent.addEventListener("clicks", doSomething, false);
+
+  // function doSomething(e) {
+  //   if (e.target !== e.currentTarget){
+  //     var clickedItem = e.target.id;
+  //     alert("Hello" + clickedItem);
+  //   }
+
+  //   e.stopPropagation();
+  // }
+  function getId(btn){
+    var selected = document.getElementById(btn.id);
+    var student_id = selected.getElementsByClassName("card-content")[0].textContent ;
+    var req_docu = selected.getElementsByClassName("card-content")[1].textContent ;
+    var req_date = selected.getElementsByClassName("card-content")[2].textContent ;
+    var req_time = selected.getElementsByClassName("card-content")[3].textContent ;
+    localStorage.setItem("Student_num", student_id);
+    localStorage.setItem("ReqDocu", req_docu);
+    localStorage.setItem("ReqDate", req_date);
+    localStorage.setItem("ReqTime", req_time);
+    // window.location.href = "{% url 'admin-about' %}";
+
+  }
+  </script>
+  
+{% endblock %}

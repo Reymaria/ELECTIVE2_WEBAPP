@@ -1,0 +1,29 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}
+
+<link rel="stylesheet" href="{% static 'css/calendar2.css' %}">
+<title>Admin - Calendar</title>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="dycalendar" id="dycalendar"></div>
+    </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/dycalendarjs@1.2.1/js/dycalendar.js"></script>
+    <script>
+        dycalendar.draw({
+            target: '#dycalendar',
+            dayformat: 'full',
+            type: 'month',
+            monthformat: 'full',
+            highlighttoday: true,
+            prevnextbutton: 'show'
+        })
+    </script>
+{% endblock %}
