@@ -34,46 +34,58 @@
 
 {% block mobile_nav %} <h4>Student Profile</h4> {% endblock %}
 {% block mobile_nav_items %}
-    <a class="active" href="{% url 'dashboard-home' %}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
+    <a class="active" href="{% url 'appointment_setter:dashboard-home' %}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
 {% endblock %}
 {% block sidebar %}<h4>Student Profile</h4>{% endblock %}
       
 {% block sidebar_items %}
-<a class="active" href="{% url 'dashboard-home' %}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
+<a class="active" href="{% url 'appointment_setter:dashboard-home' %}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
 {% endblock %}
 
 {% block content %}
-    <form name="approvalForm" onsubmit="event.preventDefault();onFormSubmit();" autocomplete="off">                  
+    <form name="approvalForm" method = "POST"  autocomplete="off"> <!--onsubmit="event.preventDefault();onFormSubmit();" I TEMPORARILY REMOVE THIS ONE-->                 
+        
         <div class="avatar">
         <img src="{% static 'img/logo.jpg' %}" alt="">
         <h4>STUDENT APPOINTMENT REQUEST FORM</h4>
         </div>
         <div class="formContents">
-            <div>
+            {% csrf_token %}
+            {{form.as_p}}
+            
+            <!-- <div>
+                
                 <label>REQUESTED DOCUMENT</label><label class="validation-error hide" id="docxValidationError">This field is required.</label>
-                <input type="text" name="student_requested_docu" id="student_requested_docu" placeholder="e.g. COR" required>
+                
+                <input type="text" name="student_req_docu" id="student_requested_docu" placeholder="e.g. COR" required style="text-transform:uppercase">
             </div>
             <div>
                 <label>DATE REQUESTED</label><label class="validation-error hide" id="dateValidationError">This field is required.</label>
-                <input type="text" name="salary" id="date" placeholder="mm/dd/yy" readonly style="cursor: pointer;">
+                <input type="text" name="req_date" id="date" placeholder="mm/dd/yy" readonly style="cursor: pointer;" >
+                
             </div>
             <div>
                 <label>TIME REQUESTED</label>
-                <select name="time" id="time">
+                <select name="req_time_choices" id="time" required>
                 <option class="choiceTime" >-- Select a time --</option>
                 <option class="choiceTime" >8:00 - 9:00 AM</option>
                 <option class="choiceTime" >9:00 - 10:00 AM</option>
                 <option class="choiceTime" >10:00 - 11:00 AM</option>
                 <option class="choiceTime" >2:00 - 3:00 PM</option>
                 <option class="choiceTime" >3:00 - 4:00 PM</option>
-                <option class="choiceTime">4:00 - 5:00 PM</option>
-                </select>
-                <label class="validation-error hide" id="timeValidationError">This field is required.</label>
-            </div>
+                </select> -->
+                <!-- <label class="validation-error hide" id="timeValidationError">This field is required.</label>
+            </div> -->
+            
         </div>
         <div  class="form-action-buttons">
-            <input type="submit" value="Submit">
+            <input type="submit" class = "button" value="Submit">
         </div>
+        <!-- {% if messages %}
+            {% for message in messages %}
+            <div style ="color:green;" id = "msg1" role = "alert">{{message}}</div>
+            {% endfor %}
+        {% endif %} -->
     </form>
     <table class="list" id="appointmentList">
         <thead>
@@ -86,7 +98,14 @@
             </tr>
         </thead>
         <tbody>
-
+            {% for read in readAppointment %}
+            <tr>
+                <td>{{read.student_req_docu}}</td>
+                <td>{{read.req_date}}</td>
+                <td>{{read.req_time_choices}}</td>
+                <td>{{read.status_field}}</td>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
 {% endblock %}
@@ -104,106 +123,6 @@
     });
     });
 </script>
-<script>
-    var selectedRow = null
-    var time = document.forms["approvalForm"]["time"];
 
-    
-function onFormSubmit() {
-    if (validate()) {
-        var formData = readFormData();
-        if (selectedRow == null)
-            insertNewRecord(formData);
-            
-        else
-            updateRecord(formData);
-        resetForm();
-    }
-}
-
-function readFormData() {
-    var formData = {};
-    formData["student_requested_docu"] = document.getElementById("student_requested_docu").value;
-    formData["date"] = document.getElementById("date").value; //DATE REQUESTED
-    formData["time"] = document.getElementById("time").value; 
-    return formData;
-}
-
-
-
-function insertNewRecord(data) { // The construction of user's list of appointment 
-    var table = document.getElementById("appointmentList").getElementsByTagName('tbody')[0];
-    var newRow = table.insertRow(table.length);
-    cell1 = newRow.insertCell(0);
-    cell1.innerHTML = data.student_requested_docu;
-    cell2 = newRow.insertCell(1);
-    cell2.innerHTML = data.date;
-    cell3 = newRow.insertCell(2);
-    cell3.innerHTML = data.time;
-    cell4 = newRow.insertCell(3);
-    cell4.innerHTML = "PENDING";
-    cell5 = newRow.insertCell(4);
-    cell5.innerHTML = `<a onClick="onDelete(this)" style=" text-decoration: none; color: darkred;">Delete</a>`;
-}
-
-function resetForm() {
-    document.getElementById("student_requested_docu").value = "";
-    document.getElementById("date").value = "";
-    document.getElementById("date").value = "";
-    selectedRow = null;
-}
-//for experiment purpose
-// function onEdit(td) {
-//     selectedRow = td.parentElement.parentElement;
-//     document.getElementById("student_requested_docu").value = selectedRow.cells[0].innerHTML;
-//     document.getElementById("date").value = selectedRow.cells[1].innerHTML;
-//     document.getElementById("time").value = selectedRow.cells[2].innerHTML;
-// }
-// function updateRecord(formData) {
-//     selectedRow.cells[0].innerHTML = formData.student_requested_docu;
-//     selectedRow.cells[1].innerHTML = formData.date;
-//     selectedRow.cells[2].innerHTML = formData.time;
-// }
-
-function onDelete(td) {
-    if (confirm('Are you sure to delete this record ?')) {
-        row = td.parentElement.parentElement;
-        document.getElementById("appointmentList").deleteRow(row.rowIndex);
-        resetForm();
-    }
-}
-function validate() {
-    isValid = true;
-    if (time.selectedIndex < 1) {
-            isValid = false;
-            document.getElementById("timeValidationError").classList.remove("hide");
-            time.focus();
-            return false;
-        }else{
-            isValid = true;
-            if (!document.getElementById("timeValidationError").classList.contains("hide"))
-                document.getElementById("timeValidationError").classList.add("hide");
-            }
-    if (document.getElementById("student_requested_docu").value == "") {
-        isValid = false;
-        document.getElementById("docxValidationError").classList.remove("hide");
-    } else {
-        isValid = true;
-        if (!document.getElementById("docxValidationError").classList.contains("hide"))
-            document.getElementById("docxValidationError").classList.add("hide");
-            
-    } if (document.getElementById("date").value == "") {
-        isValid = false;
-        document.getElementById("dateValidationError").classList.remove("hide");
-    } else {
-        isValid = true;
-        if (!document.getElementById("dateValidationError").classList.contains("hide"))
-            document.getElementById("dateValidationError").classList.add("hide");
-
-    } 
-
-    return isValid;
-}
-</script>
 
 {% endblock %}
