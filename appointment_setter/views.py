@@ -27,6 +27,21 @@ def CreateUser(request):
         messages.error(request, 'Problem occured, please try again!')
         return render (request, 'loginAndSignup/index.html')
 
+def ScheduleAppointment(request):
+    # initial_data = {
+    #     'status_field': 'pending'
+    # }
+    form = StudentAppointmentForm
+    if request.method == "POST":
+        # appointments[]
+        form = StudentAppointmentForm(request.POST or None)
+        if form.is_valid():
+            form.save()
+            return redirect ('student/schedule-appointment/')
+    # else:
+    #     form = StudentAppointmentForm
+    return render(request, 'student_side/home.html', {'form':form})
+
 
 def home (request):
 

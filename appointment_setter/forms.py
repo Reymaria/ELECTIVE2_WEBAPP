@@ -2,6 +2,27 @@ from django.forms import ModelForm
 from .models import User_registration, Student_Appointment
 from django import forms
 
+class StudentAppointmentForm (ModelForm):
+    # student_req_docu = forms.CharField(#verbose_name= 'student_req_docu',
+    #                                     # widget = forms.TextInput(attrs{'style': 'text-transform:uppercase', 'id': 'student_requested_docu', 'name': 'student_requested_docu' ,'placeholder': 'e.g. COR'})
+    #                                   )
+
+    class Meta:
+        model = Student_Appointment
+        fields =  ("student_req_docu", "req_date", "req_time_choices", "status_field")
+        labels = {
+            'student_req_docu': 'REQUESTED DOCUMENT',
+            'req_date': 'DATE REQUESTED',
+            'req_time_choices': 'TIME REQUESTED',
+        }
+        widgets = {
+            'student_req_docu': forms.TextInput(attrs = {'style': 'text-transform:uppercase', 'id': 'student_requested_docu', 'name': 'student_requested_docu' ,'placeholder': 'e.g. COR'}),
+            'req_date': forms.TextInput(attrs = {'style': 'cursor: pointer;', 'id': 'date', 'placeholder': 'mm/dd/yy', 'name': 'req_date', 'readonly':'readonly', 'required': 'required'}),
+            'status_field':forms.TextInput(attrs={'type':'hidden'}),
+            # 'status_field':forms.TextInput(attrs={'value':'PENDING'}),
+            'req_time_choices': forms.Select(attrs = {'id': 'time','required':'required'}),
+
+        }
 class AdminUpdate(ModelForm):
     class Meta:
         model = Student_Appointment

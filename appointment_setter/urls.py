@@ -7,4 +7,5 @@ urlpatterns = [
     path('admin/about/', views.about, name = 'admin-about'),
     path('', views.loginAndSignUp, name = 'appointmentsetter-home'), 
     path('student/', views.StudentSideHome, name = 'dashboard-home'), 
+    path("student/schedule-appointment/", views.ScheduleAppointment, name= "schedule-appointment"),
 ]
