@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 def home (request):
 
-    return render(request, 'admin/home.html', context)
+    return render(request, 'admin/home.html')
 
 def about (request):
     return render(request, 'admin/form_modification.html')
