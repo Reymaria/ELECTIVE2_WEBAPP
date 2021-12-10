@@ -11,18 +11,26 @@
 .Forms {
     text-align:center;
     justify-content: center;
-    align-items: center;
+    align-items: center; 
 }
 
 form {
     border: 2px solid darkred;
+    box-shadow: 0 4px 10px 4px rgba(19, 35, 47, 0.3);
+    
 }
 .form_contents{
     text-decoration: none;
+    text-align: left;
+    margin-left: 25px;
 
 }
 input {
- width: 200px;
+    width: 350px;
+    text-align: center;
+    height: 30px;
+    font-size: 28px;
+
 }
 
 br {
@@ -50,6 +58,7 @@ select{
     .label_identity{
         margin-bottom: 5px;
         margin-top: 30px;
+        font-weight: bold;
     }
     #submit{
         height: 50px;
@@ -60,76 +69,41 @@ select{
         border-radius: 15px;
         background: white;
         color: rgb(0, 0, 0);
+        font-weight: bold;
+        box-shadow: 0 2px 5px 2px rgba(19, 35, 47, 0.3);
     }
     #submit:hover {
         background: rgb(100, 0, 0);
         border: none;
         color: rgb(255, 255, 255);
+        
     }
 </style>
 {% endblock %}
 
 {% block mobile_nav %} <h4>Admin Profile</h4> {% endblock %}
 {% block mobile_nav_items %}
-    <a  href="{% url 'admin-home' %}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
+    <a  href="{% url 'appointment_setter:admin-home' %}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
 {% endblock %}
 {% block sidebar %}<h4>Admin Profile</h4>{% endblock %}
       
 {% block sidebar_items %}
-<a href="{% url 'admin-home' %}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
+<a href="{% url 'appointment_setter:admin-home' %}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
 {% endblock %}
 
 {% block content %}
 
 <div class="Forms">
     <h1 style="text-align: center;">APPOINTMENT FOR APPROVAL FORM</h1>
-    <form name="ApprovalForm" action="{% url 'admin-home' %}" 
-            onsubmit="return approval()" method="get" id="approvalForm">
-        <div class="form_contents">
-            <div class="label_identity">Student ID</div>
-            <h2 class="identity" id="StudentName"></h2>
-        </div>
-        <div class="form_contents">
-            <div class="label_identity">Requested Document</div>
-            <h2 class="identity" id="RequestedDocu"></h2>
-        </div>
-        <div class="form_contents">
-            <div class="label_identity">Requested Date of Appointment</div>
-            <h2 class="identity" id="RequestedDate"></h2>
-        </div>
-        <div class="form_contents">
-            <div class="label_identity">Requested Time of Appointment</div>
-            <h2 class="identity" id="RequestedTime"></h2>
-        <div class="form_contents">
-            <div class="label_identity"v>Change appointment time?</div>
-            <select class="identity" id="OptionChange" name="form_select" onchange="showDiv('hidden_div', this)">
-                <option value="0">No</option>
-                <option value="1">Yes</option>
-             </select> 
-        </div>
-            <div class="label_identity" id="hidden_div">
-                <select class="identity" id="ChangeAppTime" type="text" value="" name="ChangeAppTime">
-                    <option>---</option>
-                    <option>8:00 - 9:00 AM</option>
-                    <option>9:00 - 10:00 AM</option>
-                    <option>10:00 - 11:00 AM</option>
-                    <option>2:00 - 3:00 PM</option>
-                    <option>3:00 - 4:00 PM</option>
-                    <option>4:00 - 5:00 PM</option>
-                </select>
-            </div>
-        <div class="form_contents">
-            <div class="label_identity">APPROVAL STATUS</div>
-            <select class="identity" type="text" value="" name="AppStatus">
-                <option>---</option>
-                <option>Waiting List</option>
-                <option>Declined</option>
-                <option>Appointment Accepted</option>
-            </select>
+    <form name="ApprovalForm" method="POST" id="approvalForm">
+            <!-- {{ datas }} -->
+            {% csrf_token %}
+        <div class="label_identity">ADMIN APPROVAL</div>
+        <div class="form_contents">     
+            {{form.as_p}}
         </div>
         <br>    
         <p name = "">
-            
             <input id="submit" type="submit" value="Send" name="Submit">
         </p>
     </form>
@@ -153,46 +127,18 @@ select{
     var reset = 0;
     localStorage.setItem("Student_num", reset);
 </script>
-<script>
-    function approval() {
-        var AppStatus = document.forms["ApprovalForm"]["AppStatus"];
-        var form_select = document.forms["ApprovalForm"]["form_select"];
 
-        var select = document.getElementById('OptionChange');
-
-        if (select.options[select.selectedIndex].value == 1){
-            ChangeTimeEnable();
-            if (document.getElementById('ChangeAppTime').options[document.getElementById('ChangeAppTime').selectedIndex].text != "---")
-                {
-                // alert("The date is change");
-                return true;
-            }else {
-                return false;
-            }
-            
-        }
-        if (AppStatus.selectedIndex < 1) {
-            alert("Please choose approval status.");
-            AppStatus.focus();
-            return false;
-        }
-        return true;
-
-    }
-    function ChangeTimeEnable(){
-        var ChangeAppTime = document.getElementById('ChangeAppTime');
-            if (ChangeAppTime.options[ChangeAppTime.selectedIndex].text == "---"){
-                alert("You are attempting to submit a blank response in time");
-                ChangeAppTime.focus();
-                return false;
-            }
-    }
-    function showDiv(divId, element)
-    {
-        document.getElementById(divId).style.display = element.value == 1 ? 'block' : 'none';
-    }
-    // function changingTime(){
-    //     alert("Im now Changing time")
-    // }
+<script type="text/javascript">
+    $(function() {
+    var date = new Date();
+    var currentMonth = date.getMonth();
+    var currentDate = date.getDate();
+    var currentYear = date.getFullYear();
+    $('#date').datepicker({
+    dateFormat:"MM d, yy",
+    minDate: new Date(currentYear, currentMonth, currentDate)
+    });
+    });
 </script>
+
 {% endblock %}

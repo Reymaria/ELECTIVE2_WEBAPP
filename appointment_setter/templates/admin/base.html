@@ -41,10 +41,8 @@
       </div>
       <div class="mobile_nav_items">
         {% block mobile_nav_items %} {% endblock %}
-        <!-- <a href="calendar.html"><i class="fas fa-table"></i><span>Calendar</span></a> -->
-        <!-- <a href="{% url 'admin-about' %}"><i class="fas fa-th"></i><span>Appointments</span></a>
-        <a href="#"><i class="fas fa-info-circle"></i><span>About</span></a> -->
-        <a href="{% url 'appointmentsetter-home' %}"><i class="fas fa-power-off"></i><span>Log-out</span></a>
+      
+        <a href="{% url 'appointment_setter:main-home' %}"><i class="fas fa-power-off"></i><span>Log-out</span></a>
   
       </div>
     </div>
@@ -57,9 +55,7 @@
       </div>
       {% block sidebar_items %} {% endblock %}
 
-      <!-- <a href="calendar.html"><i class="fas fa-table"></i><span>Calendar</span></a> -->
-      <!-- <a href= "{% url 'admin-about' %}"><i class="fas fa-th"></i><span>Modified appointment</span></a> -->
-      <a href="{% url 'appointmentsetter-home' %}"><i class="fas fa-power-off"></i><span>Log-out</span></a>
+      <a href="{% url 'appointment_setter:main-home' %}"><i class="fas fa-power-off"></i><span>Log-out</span></a>
     </div>
     <!--sidebar end-->
   

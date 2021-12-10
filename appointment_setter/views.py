@@ -44,11 +44,23 @@ def ScheduleAppointment(request):
 
 
 def home (request):
+    readAppointment = Student_Appointment.objects.all()
+    content = {'readAppointment': readAppointment}
+    return render(request, 'admin/home.html', content )
 
-    return render(request, 'admin/home.html')
+def about (request, data_id):
+    data = Student_Appointment.objects.get(id=data_id)
 
-def about (request):
-    return render(request, 'admin/form_modification.html')
+    form = AdminUpdate(instance=data)
+    if request.method == "POST":
+        form = AdminUpdate(request.POST, instance=data)
+        if form.is_valid():
+            form.save()
+            return redirect('/admin/')
+    # content = {'datas':datas, 'form':form}
+    content = {'form':form}
+
+    return render(request, 'admin/form_modification.html', content)
 
 def calendar (request):
     return render(request, 'admin/calendar-admin.html')

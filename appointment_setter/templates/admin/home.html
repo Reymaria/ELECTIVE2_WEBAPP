@@ -10,6 +10,12 @@
     margin: 50px auto;
     box-sizing: border-box;
   }
+  .search{
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    flex-flow: row;
+  }
   .row{
     display: flex;
     flex-direction: row;
@@ -23,6 +29,8 @@
     opacity: 0.9;
     margin-bottom: 50px;
     transition: 0.3s ease-in;
+    border-radius: 4px;
+    box-shadow: 0 4px 10px 4px rgba(19, 35, 47, 0.3);
 
   }
 
@@ -44,9 +52,67 @@
     background: rgba(255, 39, 39, 0.603);
   
   }
+  input{
+    outline: none;
+    border-bottom: 2px solid darkred;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-radius: 5px;
+    width: 200%;
+
+  }
+  input:focus{
+    outline: none;
+    border-bottom: 2px solid #1da1f2;
+  }
+  .search{
+    padding: 20px;
+    display: flex;
+    justify-content: space-evenly;
+    width: 200%;
+    position: relative;
+    left: -150px;
+    box-sizing: border-box;
+
+  }
+  form{
+    padding: 20px;
+    justify-content: space-between;
+    display: inline-flex;
+    width: 150%;
+  }
+  .search-bttn {
+    border: 0;
+    outline: none;
+    border-radius: 10px;
+    padding: 10px 5px;
+    font-size: 25px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    background: #a11818;
+    color: #ffffff;
+    transition: all 0.5s ease;
+    -webkit-appearance: none;
+    width: 50%;
+  }
+  .search-bttn:hover, .search-bttn:focus {
+    background: #3a3b3b;
+  }
   @media screen and (max-width: 1600px){
     .card{
       width: 35%;
+    }
+    .search{
+      width: 105%;
+      position: relative;
+      left: -40px;
+      justify-content: space-evenly;
+      width: 100%;
+    }
+    .form{
+      margin: 120px;
     }
   }
   @media screen and (max-width: 1045px){
@@ -61,36 +127,61 @@
     .cardSet{
       margin: 10px auto;
     }
+    .search{
+      width: 200%;
+      position: relative;
+      left: -50px;
+      display: inline-block;
+      justify-content: space-between;
+      margin-right: 90px;
+    }
+    form{
+      width: 135%;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    .search{
+      width: 200%;
+      position: relative;
+      left: -50px;
+      display: inline-block;
+      box-sizing: border-box;
+    }
+    form{
+      width: 135%;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
   }
   </style>
 {% endblock %}
 {% block mobile_nav %} <h4>Admin Profile</h4> {% endblock %}
         
 {% block mobile_nav_items %}
-    <a class="active" href="{% url 'admin-home' %}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
+    <a class="active" href="{% url 'appointment_setter:admin-home' %}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
 {% endblock %}
 {% block sidebar %}<h4>Admin Profile</h4>{% endblock %}
 {% block sidebar_items %}
-<a class="active" href="{% url 'admin-home' %}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
+<a class="active" href="{% url 'appointment_setter:admin-home' %}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
 {% endblock %}
 {%block content%}
 <div class="cardSet" >
   <div class="row">
-    {% for post in posts %}
+    {% for readAppointment in readAppointment %}
     
       <div class="card" >
-        <a id="card{{ forloop.counter}}" href="{% url 'admin-about' %}" onclick="getId(this)">
+        <a id="card{{ forloop.counter}}" href="{% url 'appointment_setter:admin-about' readAppointment.id %}">
           <div >
             <div class="card-label">Student Number:</div>
-            <h2 class="card-content" id="StudentNum1">{{ post.StudentName}}</h2> <!--index 0-->
+            <h2 class="card-content" id="StudentNum1">{{ readAppointment.user_field }}</h2> <!--index 0-->
             <div class="card-label">Requested Document:</div>
-            <h3 class="card-content" id="ReqDoc1" >{{ post.ReqDocu}}</h3> <!--index 1-->
+            <h3 class="card-content" id="ReqDoc1" >{{ readAppointment.student_req_docu }}</h3> <!--index 1-->
             <div class="card-label" >Date Requested:</div>
-            <h4 class="card-content" id="ReqDate1" >{{ post.request_date}}</h4> <!--index 2-->
+            <h4 class="card-content" id="ReqDate1" >{{ readAppointment.req_date }}</h4> <!--index 2-->
             <div class="card-label" >Time Requested:</div>
-            <h4 class="card-content" id="ReqTime1" >{{ post.request_time}}</h4><!--index 3-->
+            <h4 class="card-content" id="ReqTime1" >{{ readAppointment.req_time_choices}}</h4><!--index 3-->
             <div class="card-label" >Appointment Status</div>
-            <h4 class="card-content" id="Status1" style="color: darkblue">Pending for Approval</h4>
+            <h4 class="card-content" id="Status1" style="color: darkblue">{{ readAppointment.status_field }}</h4>
           </div>
         </a>
       </div>
@@ -101,42 +192,6 @@
 {% endblock %}
 
 {% block js %}
-  <!-- <script type= "text/javascript">
-    function valueSender(clicked_id){
-      // var sn = document.getElementById("StudentNum").textContent;
-      // localStorage.setItem("Student_num", sn);
-      // window.location.href = "{% url 'admin-about' %}";
 
-      var clicks = clicked_id;
-      var try01 = document.getElementById("StudentNum");
-
-    }
-  </script> -->
-  <script>
-  // var theParent = document.querySelector("#card");
-  // theParent.addEventListener("clicks", doSomething, false);
-
-  // function doSomething(e) {
-  //   if (e.target !== e.currentTarget){
-  //     var clickedItem = e.target.id;
-  //     alert("Hello" + clickedItem);
-  //   }
-
-  //   e.stopPropagation();
-  // }
-  function getId(btn){
-    var selected = document.getElementById(btn.id);
-    var student_id = selected.getElementsByClassName("card-content")[0].textContent ;
-    var req_docu = selected.getElementsByClassName("card-content")[1].textContent ;
-    var req_date = selected.getElementsByClassName("card-content")[2].textContent ;
-    var req_time = selected.getElementsByClassName("card-content")[3].textContent ;
-    localStorage.setItem("Student_num", student_id);
-    localStorage.setItem("ReqDocu", req_docu);
-    localStorage.setItem("ReqDate", req_date);
-    localStorage.setItem("ReqTime", req_time);
-    // window.location.href = "{% url 'admin-about' %}";
-
-  }
-  </script>
   
 {% endblock %}

@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import User_registration, Student_Appointment
+from .models import Student_Appointment
 from django import forms
 
 class StudentAppointmentForm (ModelForm):
@@ -23,6 +23,7 @@ class StudentAppointmentForm (ModelForm):
             'req_time_choices': forms.Select(attrs = {'id': 'time','required':'required'}),
 
         }
+
 class AdminUpdate(ModelForm):
     class Meta:
         model = Student_Appointment
