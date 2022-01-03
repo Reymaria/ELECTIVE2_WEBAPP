@@ -1,11 +1,19 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
 from appointment_setter.models import User_registration
-from appointment_setter.models import Student_Appointment
+from appointment_setter.models import Student_Appointment, User
 from django.contrib import messages
 from .models import Student_Appointment
 from .forms import StudentAppointmentForm
+from .forms import UserRegisterForm
 from .forms import *
+from django.contrib import messages
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from .decorators import *
+
 
 
 # Create your views here.
@@ -26,6 +34,25 @@ def CreateUser(request):
     else:
         messages.error(request, 'Problem occured, please try again!')
         return render (request, 'loginAndSignup/index.html')
+    
+def user_register (request):
+    form = UserRegisterForm()
+    if request.method == "POST":
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            obj = form.save()
+            obj.user = request.user;
+            obj.user.is_staff = True
+            obj.user.is_active = False
+            obj.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'ACCOUNT SUCCESSFULLY CREATED for {username}!')
+            print('I am working!')
+            return redirect ('/')
+    else:
+        form = UserRegisterForm()
+    context = {'form': form}
+    return render(request, 'users/register.html', context)
 
 def ScheduleAppointment(request):
     # initial_data = {
