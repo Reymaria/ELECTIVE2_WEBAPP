@@ -9,4 +9,5 @@ urlpatterns = [
     path("registration/", views.CreateUser, name= "create-user"),
     path('student/', views.StudentSideHome, name = 'dashboard-home'), 
     path("student/schedule-appointment/", views.ScheduleAppointment, name= "schedule-appointment"),
+    path ('user-registration/', views.user_register, name= 'user-registration'),
 ]
