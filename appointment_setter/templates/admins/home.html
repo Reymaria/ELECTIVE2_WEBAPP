@@ -173,7 +173,7 @@
         <a id="card{{ forloop.counter}}" href="{% url 'appointment_setter:admin-about' readAppointment.id %}">
           <div >
             <div class="card-label">Student Number:</div>
-            <h2 class="card-content" id="StudentNum1">{{ readAppointment.user_field }}</h2> <!--index 0-->
+            <h2 class="card-content" id="StudentNum1" style = "text-transform: capitalize">{{ readAppointment.user.last_name }}, {{readAppointment.user.first_name}}</h2> <!--index 0-->
             <div class="card-label">Requested Document:</div>
             <h3 class="card-content" id="ReqDoc1" >{{ readAppointment.student_req_docu }}</h3> <!--index 1-->
             <div class="card-label" >Date Requested:</div>

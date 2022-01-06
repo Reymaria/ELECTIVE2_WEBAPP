@@ -3,6 +3,7 @@ from django.utils import timezone
 from datetime import date
 from django.db.models import Model
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 time_choices = [
 ('8:00 - 9:00 AM', "8:00 - 9:00 AM"),

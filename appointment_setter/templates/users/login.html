@@ -1,0 +1,94 @@
+{% extends "users/base_user.html" %}
+{% load static %}
+{% block css %}
+<style>
+  .border-top{
+    font-size: 20px;
+    justify-content: center;
+    text-decoration: none;
+    text-align: center !important;
+    color: rgb(63, 63, 63);
+  }
+  a, a:visited{
+    text-decoration: none;
+    color: maroon;
+    font-weight: bolder;
+  }
+  label{
+        position: relative;
+        color: rgb(63, 63, 63);
+    }
+    /* span{
+        visibility: hidden;
+    } */
+  .errorlist li{
+      color:  rgb(241, 43, 43);
+      font-size: 22px;
+
+  }
+  .form{
+      background: rgb(255 255 255 / 90%);
+      border-radius: 10px;
+  }
+  input{
+      height: 40px;
+      color: black;
+  }
+  .swal2-confirm{
+    background-color: darkred !important;
+  }
+</style>
+{%endblock%}
+
+{% block formcontent %}
+<div id="login">
+     
+    <h1 style="color: black;">Welcome Student!</h1>
+    
+    <!-- {% comment %} LOG IN HEREE! {% endcomment %} -->
+    <form method="POST">
+    {% csrf_token %}
+
+      <div class="label-field">
+      <label>
+        Username<span class="req">*</span>
+      </label>
+      <input type="text"required autocomplete="off" id="username" name="username"/>
+    </div>
+    
+    <div class="label-field">
+      <label>
+        Password<span class="req">*</span>
+      </label>
+      <input type="password"required autocomplete="off" id="password" name="password"/>
+    </div>
+    
+    <!-- <p class="forgot"><a href="#">Forgot Password?</a></p>
+     -->
+    <button class="button button-block">Log In</button>
+    </form>
+
+    <br>
+    <div class="border-top pt-3 ">
+      <small class = "text-muted signup_link_div">
+          DONT HAVE AN ACCOUNT ? <a href="{% url 'appointment_setter:user-registration' %}" class="ml-2">Sign Up for FREE!</a>
+      </small>
+  </div>
+   
+
+</div>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  {% for message in messages %}
+    Swal.fire({
+      position: 'center',
+      title: '<br> {{message}} <br>',
+      timerProgressBar: true,
+      showConfirmButton: false,
+      timer: 1500
+    })
+  {% endfor %}
+
+</script>
+{% endblock %}

@@ -109,7 +109,8 @@ def ScheduleAppointment(request):
 def home (request):
     readAppointment = Student_Appointment.objects.all()
     content = {'readAppointment': readAppointment}
-    return render(request, 'admin/home.html', content )
+    return render(request, 'admins/home.html', content )
+    
 @login_required
 def about (request, data_id):
     data = Student_Appointment.objects.get(id=data_id)

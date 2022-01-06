@@ -1,0 +1,43 @@
+
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="//cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+    <link rel="stylesheet" href="@sweetalert2/themes/dark/dark.css">
+    <title>Registration</title>
+    {% block css %}
+
+    {%endblock%}
+
+</head>
+
+<body>
+  <div class="banner">
+    <img class="image" src="{% static 'img/des_UIPEN.png' %}">
+  </div>
+  <div class="form">
+    {% block formcontent %}
+
+    {%endblock%}
+  
+  </div>
+  <script>
+    setTimeout(function(){
+      if ($('#msg1').length > 0){
+        $('#msg1').remove();
+      }
+    }, 3000)
+  </script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- <script src="sweetalert2/dist/sweetalert2.min.js"></script> -->
+  <!-- <script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script> -->
+  
+</body>
+</html>
