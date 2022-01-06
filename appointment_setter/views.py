@@ -17,24 +17,6 @@ from .decorators import *
 
 
 # Create your views here.
-
-def CreateUser(request):
-
-    if request.method == "POST":
-        if  request.POST.get('surname') and request.POST.get('student_id') and request.POST.get('student_email') and request.POST.get('student_pass'):
-            saverecord = User_registration()
-            saverecord.surname = request.POST.get('surname')
-            saverecord.student_id = request.POST.get('student_id')
-            saverecord.student_email = request.POST.get('student_email')
-            saverecord.student_pass = request.POST.get('student_pass')
-            saverecord.save()
-            messages.success(request, "Account Successfuly created ....!")
-            return render (request, 'loginAndSignup/index.html')
-
-    else:
-        messages.error(request, 'Problem occured, please try again!')
-        return render (request, 'loginAndSignup/index.html')
-    
 def user_register (request):
     form = UserRegisterForm()
     if request.method == "POST":
@@ -54,6 +36,60 @@ def user_register (request):
     context = {'form': form}
     return render(request, 'users/register.html', context)
 
+@unauthorized_user
+def user_login_interface (request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username = username, password = password)
+        if user is not None and user.is_superuser:
+            # if username == 'admin' and password == "elective2":
+            print("I am staff")
+            login(request, user,  backend='django.contrib.auth.backends.ModelBackend')
+            # message = "welcome admin"
+            messages.add_message(request, messages.SUCCESS,
+                                    f'Welcome Admin {username}!')
+            
+            return redirect ('admin/')
+            
+        elif user is not None and user.is_active:
+            print("I am student")
+            login(request, user)
+            # message = "welcome user"
+            messages.add_message(request, messages.SUCCESS,
+                                    f'welcome student')
+
+            return redirect ('student/')
+        else:
+            # message = "invalid credentials"
+            messages.add_message(request, messages.ERROR,
+                                f'INVALID CREDENTIALS for {username}. Incorect username or password')
+            
+            return render(request, 'users/login.html' )
+
+    return render(request, 'users/login.html')
+
+@login_required
+def CreateUser(request):
+
+    if request.method == "POST":
+        if  request.POST.get('surname') and request.POST.get('student_id') and request.POST.get('student_email') and request.POST.get('student_pass'):
+            saverecord = User_registration()
+            saverecord.surname = request.POST.get('surname')
+            saverecord.student_id = request.POST.get('student_id')
+            saverecord.student_email = request.POST.get('student_email')
+            saverecord.student_pass = request.POST.get('student_pass')
+            saverecord.save()
+            messages.success(request, "Account Successfuly created ....!")
+            return render (request, 'loginAndSignup/index.html')
+
+    else:
+        messages.error(request, 'Problem occured, please try again!')
+        return render (request, 'loginAndSignup/index.html')
+    
+
+@login_required
 def ScheduleAppointment(request):
     # initial_data = {
     #     'status_field': 'pending'
@@ -69,12 +105,12 @@ def ScheduleAppointment(request):
     #     form = StudentAppointmentForm
     return render(request, 'student_side/home.html', {'form':form})
 
-
+@login_required
 def home (request):
     readAppointment = Student_Appointment.objects.all()
     content = {'readAppointment': readAppointment}
     return render(request, 'admin/home.html', content )
-
+@login_required
 def about (request, data_id):
     data = Student_Appointment.objects.get(id=data_id)
 
@@ -88,13 +124,13 @@ def about (request, data_id):
     content = {'form':form}
 
     return render(request, 'admin/form_modification.html', content)
-
+@login_required
 def calendar (request):
     return render(request, 'admin/calendar-admin.html')
-
+@login_required
 def loginAndSignUp(request):
     return render(request, 'loginAndSignup/index.html')
-
+@login_required
 def StudentSideHome(request):
     form = StudentAppointmentForm(initial = {'status_field': 'PENDING'})
     readAppointment = Student_Appointment.objects.all()
