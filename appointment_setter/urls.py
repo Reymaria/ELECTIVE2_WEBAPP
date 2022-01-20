@@ -1,5 +1,7 @@
+from django.contrib import auth
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', views.home, name = 'admin-home'), 
@@ -11,4 +13,6 @@ urlpatterns = [
     path('student/', views.StudentSideHome, name = 'dashboard-home'), 
     path("student/schedule-appointment/", views.ScheduleAppointment, name= "schedule-appointment"),
     path ('user-registration/', views.user_register, name= 'user-registration'),
+    path('redirection/', views.redirection, name= 'redirection' ),
+    path('logout_user/', views.logout_user, name= 'logout_user' ),
 ]
