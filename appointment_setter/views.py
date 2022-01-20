@@ -141,3 +141,12 @@ def StudentSideHome(request):
             form.save()
             return redirect(request.path)
     return render(request, 'student_side/home.html', {'readAppointment': readAppointment, 'form':form})
+
+def logout_user(request):
+    logout(request)
+    messages.success(request, ("You were Log out, please Log in again"))
+    return redirect('/')
+
+def redirection (request):
+    readAppointment = Student_Appointment.objects.all()
+    return render(request, 'student_side/redirection.html', {'readappointment':readAppointment})
