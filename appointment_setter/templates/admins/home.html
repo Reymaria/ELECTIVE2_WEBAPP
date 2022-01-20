@@ -3,7 +3,10 @@
 
 
 {% block title %}
+{% comment %} I CHANGE THIS {% endcomment %}
   <title>Admin - Dashboard</title>
+    <link href="//cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+  <link rel="stylesheet" href="@sweetalert2/themes/dark/dark.css">
   <style>
     .cardSet{
     width: 90%;
@@ -160,7 +163,16 @@
 {% block mobile_nav_items %}
     <a class="active" href="{% url 'appointment_setter:admin-home' %}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
 {% endblock %}
-{% block sidebar %}<h4>Admin Profile</h4>{% endblock %}
+
+{% block sidebar %}
+{%if user.is_authenticated and user.is_superuser%}
+  <h4>Admin Profile</h4>
+{% else %}
+  <h4 style = "text-transform: capitalize;" >{{user.last_name}},{{user.first_name}}</h4>
+{% endif %}
+
+{% endblock %}
+
 {% block sidebar_items %}
 <a class="active" href="{% url 'appointment_setter:admin-home' %}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
 {% endblock %}
@@ -188,6 +200,23 @@
     {% endfor %}
   </div>
 </div> 
+
+{% comment %} I add this! {% endcomment %}
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    {% for message in messages %}
+      Swal.fire({
+        icon: 'success',
+        position: 'top-end',
+        title: '<br> {{message}} <br>',
+        timerProgressBar: true,
+        showConfirmButton: false,
+        timer: 1500
+      })
+    {% endfor %}
+  
+</script>
 
 {% endblock %}
 
