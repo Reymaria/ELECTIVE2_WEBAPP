@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.deletion import CASCADE
 from django.utils import timezone
 from datetime import date
 from django.db.models import Model
@@ -39,8 +40,9 @@ class Student_Appointment (models.Model):
     choices = time_choices, blank = True, null = True)
     status_field = models.CharField(max_length=200, verbose_name = "status_field",
     choices = status_field_choices, blank = True, null = True)
-    user_field = models.CharField(max_length=30, verbose_name= 'user_field', default = "TUPC180127")
+    user = models.ForeignKey(User, verbose_name="user", on_delete=models.CASCADE, null=True)
     date_posted = models.DateField(default=date.today)
+    user_name = models.CharField(max_length=200, verbose_name= 'user_name')
     # Student = models.ForeignKey(User_registration, on_delete = models.CASCADE)
     class Meta:
         db_table = "student_appointment"
