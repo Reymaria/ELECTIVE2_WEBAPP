@@ -1,0 +1,5 @@
+{% extends "admins/base.html" %}
+
+{% if user.is_staff %}
+{% include "studdent_side/home.html" %}   
+{% endif %}

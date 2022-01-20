@@ -1,0 +1,75 @@
+{% extends "users/base_user.html" %}
+{% load static %}
+{% block css %}
+<style>
+    .border-top{
+    font-size: 15px;
+    justify-content: center;
+    text-align: center !important;
+    color: rgb(63, 63, 63);
+    }
+    label{
+        position: relative;
+        color: rgb(63, 63, 63);
+    }
+    /* span{
+        visibility: hidden;
+    } */
+    .errorlist li{
+        color:  rgb(241, 43, 43);
+        font-size: 22px;
+
+    }
+    .form{
+        background: rgb(255 255 255 / 90%);
+        border-radius: 10px;
+    }
+    input{
+       height: 40px;
+       color: black;
+    }
+    #signup{
+        color: darkred;
+        font-weight: bolder;
+    }
+    ul li{
+        list-style: none;
+        position: relative;
+        left: -30px;        
+    }
+    h1{
+        font-size: 30px;
+        color: darkred;
+        font-weight: bolder;
+    }
+</style>
+{%endblock%}
+
+
+{% block formcontent %}
+
+<div id="signup">   
+    {% if messages %}
+    {% for message in messages %}
+    <div class = "alert alert-success m-2 alert-{{message.tags}}" id = "msg1" role = "alert">{{message}}</div>
+    {% endfor %}
+    {% endif %}
+    <h1>Sign Up for Student Account</h1>
+    <form action= "{% url 'appointment_setter:user-registration' %}" method="POST">
+        <div class="top-row">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="button button-block">Get Started</button>
+        
+    </form>
+    <br>
+    <div class="border-top pt-3">
+        <small class = "text-muted">
+            ALREADY HAVE AN ACCOUNT? CLICK <a href="{% url 'appointment_setter:user-log-in-interface' %}" class="ml-2">Sign In</a>
+        </small>
+    </div>
+</div>
+
+
+{%endblock%}
