@@ -28,21 +28,39 @@
 }
 </style>
 {% endblock %}
+
 {% block title %}
-  <title>Student - Dashboard</title>
+{% if user.is_authenticated %}
+  <title>{{user.username}} - Dashboard</title>
+{% endif %}
 {% endblock %}
 
-{% block mobile_nav %} <h4>Student Profile</h4> {% endblock %}
+{% block mobile_nav %} 
+{% if user.is_authenticated %}
+    <h4 style = "text-transform: capitalize;">{{user.last_name}},{{user.first_name}}</h4>
+{% endif %}
+{% endblock %}
+
 {% block mobile_nav_items %}
     <a class="active" href="{% url 'appointment_setter:dashboard-home' %}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
 {% endblock %}
-{% block sidebar %}<h4>Student Profile</h4>{% endblock %}
+{% block sidebar %}
+{% if user.is_authenticated %}
+    <h4 style = "text-transform: capitalize;" >{{user.last_name}},{{user.first_name}}</h4>
+{% endif %}
+{% endblock %}
       
 {% block sidebar_items %}
 <a class="active" href="{% url 'appointment_setter:dashboard-home' %}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
 {% endblock %}
 
 {% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class = "alert alert-success m-2 alert-{{message.tags}}" id = "msg1" role = "alert">{{message}}</div>
+        {% endfor %}
+    {% endif %}
+
     <form name="approvalForm" method = "POST"  autocomplete="off"> <!--onsubmit="event.preventDefault();onFormSubmit();" I TEMPORARILY REMOVE THIS ONE-->                 
         
         <div class="avatar">
@@ -52,6 +70,8 @@
         <div class="formContents">
             {% csrf_token %}
             {{form.as_p}}
+            <br>            
+            <input type="hidden" name="user_name" id="user_name" placeholder="e.g. COR" required style="text-transform:uppercase" value = "{{user.first_name}} {{user.last_name}}"> 
             
             <!-- <div>
                 
