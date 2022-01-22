@@ -42,7 +42,7 @@
       <div class="mobile_nav_items">
         {% block mobile_nav_items %} {% endblock %}
       
-        <a href="{% url 'appointment_setter:main-home' %}"><i class="fas fa-power-off"></i><span>Log-out</span></a>
+        <a href="{% url 'appointment_setter:logout_user' %}"><i class="fas fa-power-off"></i><span>Log-out</span></a>
   
       </div>
     </div>
@@ -55,7 +55,7 @@
       </div>
       {% block sidebar_items %} {% endblock %}
 
-      <a href="{% url 'appointment_setter:main-home' %}"><i class="fas fa-power-off"></i><span>Log-out</span></a>
+      <a href="{% url 'appointment_setter:logout_user' %}"><i class="fas fa-power-off"></i><span>Log-out</span></a>
     </div>
     <!--sidebar end-->
   

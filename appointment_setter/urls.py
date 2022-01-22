@@ -15,4 +15,7 @@ urlpatterns = [
     path ('user-registration/', views.user_register, name= 'user-registration'),
     path('redirection/', views.redirection, name= 'redirection' ),
     path('logout_user/', views.logout_user, name= 'logout_user' ),
+    path('admin/student/', views.StudentSideHome, name = 'dashboard-home1'), 
+    path('student/admin/', views.home, name = 'admin-home1'), 
+
 ]

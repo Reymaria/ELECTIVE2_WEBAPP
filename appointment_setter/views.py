@@ -70,6 +70,8 @@ def user_login_interface (request):
 
     return render(request, 'users/login.html')
 
+
+# Disregard this Create User
 @login_required
 def CreateUser(request):
 
@@ -87,30 +89,59 @@ def CreateUser(request):
     else:
         messages.error(request, 'Problem occured, please try again!')
         return render (request, 'loginAndSignup/index.html')
-     
 
+# This is for thee creation of Student Side Appointment
 @login_required
 def ScheduleAppointment(request):
-    # initial_data = {
-    #     'status_field': 'pending'
-    # }
-    form = StudentAppointmentForm
-    if request.method == "POST":
-        # appointments[]
-        form = StudentAppointmentForm(request.POST or None)
-        if form.is_valid():
-            form.save()
-            return redirect ('student/schedule-appointment/')
-    # else:
-    #     form = StudentAppointmentForm
-    return render(request, 'student_side/home.html', {'form':form})
+    if request.user.is_authenticated and not request.user.is_superuser:
+        form = StudentAppointmentForm
+        if request.method == "POST":
+            form = StudentAppointmentForm(request.POST or None)
+            if form.is_valid():
+                obj = form.save()
+                obj.user = request.user;
+                obj.save()
+                form = StudentAppointmentForm()
+                messages.success(request, "Appointment Successfully Created!")
+                return redirect ('student/schedule-appointment/')
+        # else:
+        #     form = StudentAppointmentForm
+        return render(request, 'student_side/home.html', {'form':form})
+    else:
+        return redirect('admin/')
 
+
+# This is for Student Side Display of Created Appointment with form Visibility
+@login_required
+def StudentSideHome(request):
+    if request.user.is_authenticated and not request.user.is_superuser:
+        form = StudentAppointmentForm(initial = {'status_field': 'PENDING'})
+        readAppointment = Student_Appointment.objects.filter(user=request.user)
+        # print(filterAppointment)
+        if request.method == "POST":
+            form = StudentAppointmentForm(request.POST)
+            if form.is_valid():
+                obj = form.save()
+                obj.user = request.user;
+                obj.save()
+                form = StudentAppointmentForm()
+                return redirect(request.path)
+        return render(request, 'student_side/home.html', {'readAppointment': readAppointment, 'form':form})
+    else:
+        return redirect('admin/')
+     
+
+#This is for the Admin Home Page Display
 @login_required
 def home (request):
-    readAppointment = Student_Appointment.objects.all()
-    content = {'readAppointment': readAppointment}
-    return render(request, 'admins/home.html', content )
-    
+    if request.user.is_authenticated and request.user.is_superuser:
+        readAppointment = Student_Appointment.objects.all()
+        content = {'readAppointment': readAppointment}
+        return render(request, 'admins/home.html', content )
+    else:
+        return redirect('student/')
+
+# This is for the Admin Form Modification
 @login_required
 def about (request, data_id):
     data = Student_Appointment.objects.get(id=data_id)
@@ -123,24 +154,30 @@ def about (request, data_id):
             return redirect('/admin/')
     # content = {'datas':datas, 'form':form}
     content = {'form':form}
+    return render(request, 'admins/form_modification.html', content)
 
-    return render(request, 'admin/form_modification.html', content)
+
+# For Logging
+def logout_user(request):
+    logout(request)
+    messages.success(request, ("You were Log out, please Log in again"))
+    return redirect('/')
+
+
+
+
+
+
+
+# Disregard this calendar [experimental stage]
 @login_required
 def calendar (request):
     return render(request, 'admin/calendar-admin.html')
+
+# Disregard this loginAndSignUp [old log in page without django]
 @login_required
 def loginAndSignUp(request):
     return render(request, 'loginAndSignup/index.html')
-@login_required
-def StudentSideHome(request):
-    form = StudentAppointmentForm(initial = {'status_field': 'PENDING'})
-    readAppointment = Student_Appointment.objects.all()
-    if request.method == "POST":
-        form = StudentAppointmentForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect(request.path)
-    return render(request, 'student_side/home.html', {'readAppointment': readAppointment, 'form':form})
 
 def logout_user(request):
     logout(request)
