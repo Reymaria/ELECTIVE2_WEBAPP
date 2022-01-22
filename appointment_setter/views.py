@@ -87,7 +87,7 @@ def CreateUser(request):
     else:
         messages.error(request, 'Problem occured, please try again!')
         return render (request, 'loginAndSignup/index.html')
-    
+     
 
 @login_required
 def ScheduleAppointment(request):
