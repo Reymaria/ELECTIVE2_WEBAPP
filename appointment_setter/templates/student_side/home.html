@@ -3,6 +3,8 @@
 
 {% block style %}
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<link href="//cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+<link rel="stylesheet" href="@sweetalert2/themes/dark/dark.css">
 <style>
     select{
         height: 30px;
@@ -55,11 +57,7 @@
 {% endblock %}
 
 {% block content %}
-    {% if messages %}
-        {% for message in messages %}
-            <div class = "alert alert-success m-2 alert-{{message.tags}}" id = "msg1" role = "alert">{{message}}</div>
-        {% endfor %}
-    {% endif %}
+    
 
     <form name="approvalForm" method = "POST"  autocomplete="off"> <!--onsubmit="event.preventDefault();onFormSubmit();" I TEMPORARILY REMOVE THIS ONE-->                 
         
@@ -142,6 +140,21 @@
     minDate: new Date(currentYear, currentMonth, currentDate)
     });
     });
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    {% for message in messages %}
+      Swal.fire({
+        icon: 'success',
+        position: 'top-end',
+        title: '<br> {{message}} <br>',
+        timerProgressBar: true,
+        showConfirmButton: false,
+        timer: 1500
+      })
+    {% endfor %}
+  
 </script>
 
 

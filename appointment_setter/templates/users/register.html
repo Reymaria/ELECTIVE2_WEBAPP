@@ -54,7 +54,7 @@
     <div class = "alert alert-success m-2 alert-{{message.tags}}" id = "msg1" role = "alert">{{message}}</div>
     {% endfor %}
     {% endif %}
-    <h1>Sign Up for Student Account</h1>
+    <h1>Sign Up</h1>
     <form action= "{% url 'appointment_setter:user-registration' %}" method="POST">
         <div class="top-row">
         {% csrf_token %}
